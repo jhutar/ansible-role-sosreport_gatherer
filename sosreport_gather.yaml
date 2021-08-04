@@ -1,0 +1,10 @@
+- name: "Install, run and collect sosreports"
+  hosts: all
+  remote_user: root
+  gather_facts: off
+  tasks:
+    - name: "Install, run and collect sosreports"
+      include_role:
+        name: sosreport_gather
+      vars:
+        sosreport_gather_local_dir: /tmp/sosreports

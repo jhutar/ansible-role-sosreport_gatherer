@@ -1,0 +1,18 @@
+---
+- name: "Install sosreport"
+  yum:
+    name: sos
+    state: installed
+
+- name: "Run sosreport"
+  command: "sos report --batch"
+  register: sosreport_cmd
+
+- name: "Extract sosreport tarball name"
+  setfact:
+    sosreport_tarball: "{{ sosreport_cmd|select('match', '^\s\*/var/tmp/sosreport-.*')|first|trim }}"
+
+- name: "Fetch sosreport tarballs"
+  debug:
+    var: sosreport_tarball
+...
