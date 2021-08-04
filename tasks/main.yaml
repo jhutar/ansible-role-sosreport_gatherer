@@ -29,19 +29,19 @@
 
 - name: "Show direcotry we will be fetching to"
   ansible.builtin.debug:
-    var: sosreport_gather_local_dir
+    var: sosreport_gatherer_local_dir
   run_once: yes
 
 - name: "Cleanup local sosreport tarballs dir"
   ansible.builtin.file:
-    path: "{{ sosreport_gather_local_dir }}"
+    path: "{{ sosreport_gatherer_local_dir }}"
     state: absent
   delegate_to: localhost
 
 - name: "Fetch sosreport tarballs"
   ansible.builtin.fetch:
     src: "{{ sosreport_tarball }}"
-    dest: "{{ sosreport_gather_local_dir }}"
+    dest: "{{ sosreport_gatherer_local_dir }}"
     flat: yes
 
 - name: "Cleanup remote sosreport tarballs"

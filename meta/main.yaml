@@ -1,10 +1,10 @@
 galaxy_info:
-  role_name: sosreport_gather
+  role_name: sosreport_gatherer
   author: Jan Hutar
   description: Install, run and collect sosreports
   company: Red Hat
 
-  issue_tracker_url: https://github.com/jhutar/ansible-role-sosreport-gather/issues
+  issue_tracker_url: https://github.com/jhutar/ansible-role-sosreport_gatherer/issues
 
   license: GPLv3
 

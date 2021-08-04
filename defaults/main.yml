@@ -1,1 +1,1 @@
-sosreport_gather_local_dir: /tmp/sosreports/
+sosreport_gatherer_local_dir: /tmp/sosreports/

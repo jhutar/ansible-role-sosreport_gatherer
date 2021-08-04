@@ -5,6 +5,6 @@
   tasks:
     - name: "Install, run and collect sosreports"
       include_role:
-        name: sosreport_gather
+        name: sosreport_gatherer
       vars:
-        sosreport_gather_local_dir: /tmp/sosreports/
+        sosreport_gatherer_local_dir: /tmp/sosreports/
