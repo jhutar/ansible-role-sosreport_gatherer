@@ -17,14 +17,17 @@ and then to install the role:
 
 Now the role is available in `roles/sosreport_gather/`.
 
-Check `sosreport_gather.yaml` for example on how to run the playbook.
+Check `sosreport_gather.yaml` for example on how to use the role in the playbook.
 
 
 ## Configuration
 
+* To specify directory (local on Ansible controller) where you want to store the sosreport tarballs, use `sosreport_gather_local_dir` variable.
+
 
 ### Default variables
 
+* `sosreport_gather_local_dir` set to `/tmp/sosreports/` by default
 
 ## References
 

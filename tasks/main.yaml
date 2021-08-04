@@ -1,6 +1,6 @@
 ---
 - name: "Install sosreport"
-  yum:
+  ansible.builtin.package:
     name: sos
     state: installed
 
@@ -9,10 +9,43 @@
   register: sosreport_cmd
 
 - name: "Extract sosreport tarball name"
-  setfact:
-    sosreport_tarball: "{{ sosreport_cmd|select('match', '^\s\*/var/tmp/sosreport-.*')|first|trim }}"
+  ansible.builtin.set_fact:
+    sosreport_tarball: "{{ sosreport_cmd.stdout_lines|select('match', '^\\s*/var/tmp/sosreport-.*')|first|trim }}"
+
+- name: "Get sosreport tarball size"
+  ansible.builtin.stat:
+    path: "{{ sosreport_tarball }}"
+  register: sosreport_stat
+
+- name: "Check sosreport tarball file exists"
+  ansible.builtin.assert:
+    that:
+      - sosreport_stat.stat.exists
+    quiet: yes
+
+- name: "Show info about remote sosreport tarballs"
+  ansible.builtin.debug:
+    msg: "Generated {{ sosreport_tarball }} in {{ sosreport_cmd.delta }} seconds with file size {{ sosreport_stat.stat.size|filesizeformat }}"
+
+- name: "Show direcotry we will be fetching to"
+  ansible.builtin.debug:
+    var: sosreport_gather_local_dir
+  run_once: yes
+
+- name: "Cleanup local sosreport tarballs dir"
+  ansible.builtin.file:
+    path: "{{ sosreport_gather_local_dir }}"
+    state: absent
+  delegate_to: localhost
 
 - name: "Fetch sosreport tarballs"
-  debug:
-    var: sosreport_tarball
+  ansible.builtin.fetch:
+    src: "{{ sosreport_tarball }}"
+    dest: "{{ sosreport_gather_local_dir }}"
+    flat: yes
+
+- name: "Cleanup remote sosreport tarballs"
+  ansible.builtin.file:
+    path: "{{ sosreport_tarball }}"
+    state: absent
 ...
