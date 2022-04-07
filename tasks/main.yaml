@@ -5,7 +5,7 @@
     state: installed
 
 - name: "Run sosreport"
-  command: "sos report --batch"
+  command: "sosreport --batch"
   register: sosreport_cmd
 
 - name: "Extract sosreport tarball name"
