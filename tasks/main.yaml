@@ -1,8 +1,33 @@
 ---
+- name: "Gather list of installed packages"
+  ansible.builtin.package_facts:
+
+- name: "If running on Satellite, check if lock is active"
+  ansible.builtin.command: satellite-maintain packages is-locked
+  when: "'satellite-maintain' in ansible_facts.packages"
+  ignore_errors: yes
+  register: satellite_lock_cmd
+  changed_when: false
+  failed_when: "satellite_lock_cmd.rc not in [0, 1]"
+
+- name: "If running on Satellite, determine lock state"
+  ansible.builtin.set_fact:
+    satellite_lock: "(satellite_lock_cmd.stdout == 'Packages are locked') | ternary('locked', 'unlocked')"
+  when: "satellite_lock_cmd is defined"
+
+- name: "If running on Satellite and locked, unlock"
+  command: "satellite-maintain packages unlock"
+  when: "satellite_lock is defined and satellite_lock == 'locked'"
+
 - name: "Install sosreport"
   ansible.builtin.package:
     name: sos
     state: installed
+  when: "'sos' not in ansible_facts.packages"
+
+- name: "If running on Satellite that was locked, lock"
+  command: "satellite-maintain packages lock"
+  when: "satellite_lock is defined and satellite_lock == 'locked'"
 
 - name: "Run sosreport"
   command: "sosreport --batch"
