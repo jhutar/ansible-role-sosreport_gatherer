@@ -12,7 +12,7 @@
 
 - name: "If running on Satellite, determine lock state"
   ansible.builtin.set_fact:
-    satellite_lock: "(satellite_lock_cmd.stdout == 'Packages are locked') | ternary('locked', 'unlocked')"
+    satellite_lock: "{{ (satellite_lock_cmd.stdout == 'Packages are locked') | ternary('locked', 'unlocked') }}"
   when: "satellite_lock_cmd is defined"
 
 - name: "If running on Satellite and locked, unlock"
