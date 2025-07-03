@@ -1,4 +1,9 @@
 ---
+- name: "Detect RHEL release"
+  ansible.builtin.setup:
+    filter: ansible_distribution_major_version
+  when: ansible_distribution_major_version is not defined
+
 - name: "Gather list of installed packages"
   ansible.builtin.package_facts:
 
@@ -29,9 +34,17 @@
   command: "satellite-maintain packages lock"
   when: "'sos' not in ansible_facts.packages and satellite_lock is defined and satellite_lock == 'locked'"
 
-- name: "Run sosreport"
+- name: "Run sosreport (on < RHEL 8)"
   command: "sosreport --batch"
   register: sosreport_cmd
+  when:
+    - ansible_distribution_major_version | int < 8
+
+- name: "Run sosreport (on >= RHEL 8)"
+  command: "sos report --batch"
+  register: sosreport_cmd
+  when:
+    - ansible_distribution_major_version | int >= 8
 
 - name: "Extract sosreport tarball name"
   ansible.builtin.set_fact:
