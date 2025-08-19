@@ -35,13 +35,13 @@
   when: "'sos' not in ansible_facts.packages and satellite_lock is defined and satellite_lock == 'locked'"
 
 - name: "Run sosreport (on < RHEL 8)"
-  command: "sosreport --batch"
+  command: "sosreport --batch --all-logs"
   register: sosreport_cmd
   when:
     - ansible_distribution_major_version | int < 8
 
 - name: "Run sosreport (on >= RHEL 8)"
-  command: "sos report --batch"
+  command: "sos report --batch --all-logs"
   register: sosreport_cmd
   when:
     - ansible_distribution_major_version | int >= 8
